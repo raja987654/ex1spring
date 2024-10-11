@@ -1,0 +1,38 @@
+pipeline {
+    agent any
+    
+    tools {
+        maven 'maven'
+    }
+    
+    stages {
+        stage("Clean up") {
+            steps {
+                deleteDir()
+            }
+        }
+        
+        stage("Clone repo") {
+            steps {
+                sh "git clone https://github.com/raja987654/ex1spring."
+            }
+        }
+        
+        stage("Generate backend image") {
+            steps {
+                dir("exp-spring") {
+                    sh "mvn clean install"
+                    sh "docker build -t docexp1-spring ."
+                }
+            }
+        }
+        
+        stage("Run docker Compose") {
+            steps {
+                dir("exp-spring") {
+                    sh "docker compose up -d"
+                }
+            }
+        }
+    }
+}
