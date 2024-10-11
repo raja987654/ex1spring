@@ -1,0 +1,6 @@
+
+services:
+  spring-boot-app:
+    image: docexp1-spring
+    ports:
+      - "8084:8080"
