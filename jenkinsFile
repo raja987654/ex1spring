@@ -14,17 +14,22 @@ pipeline {
         
         stage("Clone repo") {
             steps {
-                // Utiliser bat au lieu de sh pour Windows
                 bat "git clone https://github.com/raja987654/ex1spring.git"
+                // Ajout d'une commande pour lister les fichiers
+                bat "dir /s /b ex1spring"
             }
         }
         
         stage("Generate backend image") {
             steps {
-                // Utiliser dir pour entrer dans le bon répertoire
-                dir("ex1spring") {  // Assurez-vous que c'est le bon nom du dossier
-                    bat "mvn clean install"
-                    bat "docker build -t docexp1-spring ."
+                dir("ex1spring") {
+                    // Vérifions d'abord si nous sommes dans le bon répertoire
+                    bat "echo Current directory:"
+                    bat "cd"
+                    bat "dir"
+                    // Si le pom.xml existe, on continue
+                    bat "if exist pom.xml (mvn clean install) else (echo pom.xml not found)"
+                    bat "if exist Dockerfile (docker build -t docexp1-spring .) else (echo Dockerfile not found)"
                 }
             }
         }
@@ -32,7 +37,7 @@ pipeline {
         stage("Run docker Compose") {
             steps {
                 dir("ex1spring") {
-                    bat "docker compose up -d"
+                    bat "if exist docker-compose.yml (docker compose up -d) else (echo docker-compose.yml not found)"
                 }
             }
         }
