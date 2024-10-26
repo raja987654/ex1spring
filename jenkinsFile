@@ -14,23 +14,25 @@ pipeline {
         
         stage("Clone repo") {
             steps {
-                sh "git clone https://github.com/raja987654/ex1spring."
+                // Utiliser bat au lieu de sh pour Windows
+                bat "git clone https://github.com/raja987654/ex1spring.git"
             }
         }
         
         stage("Generate backend image") {
             steps {
-                dir("exp-spring") {
-                    sh "mvn clean install"
-                    sh "docker build -t docexp1-spring ."
+                // Utiliser dir pour entrer dans le bon répertoire
+                dir("ex1spring") {  // Assurez-vous que c'est le bon nom du dossier
+                    bat "mvn clean install"
+                    bat "docker build -t docexp1-spring ."
                 }
             }
         }
         
         stage("Run docker Compose") {
             steps {
-                dir("exp-spring") {
-                    sh "docker compose up -d"
+                dir("ex1spring") {
+                    bat "docker compose up -d"
                 }
             }
         }
